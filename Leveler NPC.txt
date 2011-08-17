@@ -1,0 +1,21 @@
+//===== Athena Script ========================================
+//= Leveler NPC
+//===== Credits to ===========================================
+//= Created by : Deviant
+//= Re-Edit  : --
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= 1 Click to limit level
+//= simple script, easy to edit
+//===== Additional Comments: =================================
+
+prontera,148,191,4	script	Leveler	94,{
+OnClick:
+	atcommand "@blvl 99";
+	atcommand "@jlvl 70";
+
+	end;
+}
