@@ -1,0 +1,71 @@
+//===== Athena Script ========================================
+//= Monster Rental NPC
+//===== Credits to ===========================================
+//= Created by : Rz
+//= Re-Edit  : --
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= 1.0 Experiment [Rz]
+//===== Additional Comments: =================================
+
+payon,169,237,5	script	Monster Rental	402,{
+
+//---- Config ---------
+	set .price, "100000000";	// Price for rent every*Rental time(default 1m)
+	set .time, "10";		// Rental duration (default 10 minutes)
+	set @npc$, "Rentel";		// NPC Name
+//---- Config end -----
+
+L_home:
+	mes "["+@npc$+"]";
+	mes "Hi, ^0000FF"+strcharinfo(0)+"^000000!";
+	mes "Do you like to rent a monster as your slave?";
+	mes "The price only ^0000FF"+.price+"^000000z for ^0000FF"+.time+"^000000 minutes";
+	next;
+	menu "Yes, sure",-,"Err..No",L_no,"Information",L_info;
+	if(Zeny<.price) goto L_money;
+	mes "["+@npc$+"]";
+	mes "Insert correct monster ID";
+	mes "always use @mi to know it";
+	close2;
+	goto L_input;
+
+L_input:
+	input @mob;
+	mes "["+@npc$+"]";
+	mes "Are you sure want a ^0000FF"+strmobinfo(1,@mob)+"^000000";
+	mes "as your monster slave?";
+	menu "Yes",-,"I changed my mind",L_no;
+	close2;
+	set Zeny,Zeny-.price;
+	atcommand strcharinfo(0)+":@summon "+@mob+" "+.time;
+	close;
+
+L_no:
+	mes "["+@npc$+"]";
+	mes "see you later";
+	close;
+
+L_info:
+	mes "["+@npc$+"]";
+	mes "What's this for?";
+	mes "You can rent a monster as your slave";
+	mes "but, if you died or relog the monster will die as well";
+	next;
+	mes "[Note]";
+	mes "Never use this monster for hunting mvp,";
+	mes "because mvp take it as rude attack";
+	mes "and teleport away";
+	close2;
+	goto L_home;
+
+L_money:
+	mes "["+@npc$+"]";
+	mes "You have not enough money";
+	close;
+
+
+}
