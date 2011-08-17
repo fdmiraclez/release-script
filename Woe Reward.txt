@@ -1,0 +1,70 @@
+//===== Athena Script ========================================
+//= Woe Reward NPC
+//===== Credits to ===========================================
+//= Created by : Gm SKy
+//= Re-Edit  : --
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= You May Change the item 
+//= Easily Edittable to edit another item
+//===== Additional Comments: =================================
+
+prontera,143,169,4	script	WOE Prizes Changer	827,{
+	mes "[^000000WOE Prizes Changer^000000]";
+	mes "Hey There.";
+	mes "The Champion Of SERVERNAME.";
+	mes "Awesome Woe Skill you show just now.";
+	mes "You have a talented skill in your soul.";
+	mes "Anyway...";
+	mes "Congratulation to you.";
+	next;
+	mes "Here The Reward List For The Woe:";
+	next;
+	mes "1)Poring Coin x 10";
+	mes "2)Steamed Tongue (+10 Str) x 10";
+	mes "3)Dragon Cocktail (+10 Int) x 10";
+	mes "4)Cooked Nine Tail (+10 Agi) x 10";
+	next;
+	mes "5)Steamed Scorpions (+10 Luk) x 10";
+	mes "6)Hwergelmir's Tonic (+10 Dex) x 10";
+	mes "7)5 Millions Zeny";
+	mes "";
+	next;
+	menu "",L_required,"My Reward",L_check,"Leave",L_partir;
+
+	L_required:
+		mes "[^000000WOE Prizes Changer^000000]";
+		mes "^FF00001^000000 Golden Key"; //7779
+		close;
+
+	L_check:
+		if(countitem(7779) < 1) goto L_manque;
+		mes "[^000000WOE Prizes Changer^000000]";
+		mes "Thanks For Joining SERVERNAME WOE.";
+		mes "";
+		delitem 7779,1;
+		getitem 7539,10;
+		getitem 12903,1;
+		getitem 12905,1;
+		getitem 12904,1;
+		getitem 12907,1;
+		getitem 12906,1;
+		set Zeny, Zeny + 5000000;
+		close;
+
+	L_manque:
+		mes "[^000000WOE Prizes Changer^000000]";
+		mes "You Not Our Champion";
+		mes "You dont have a Holy Golden Key on you.";
+		mes "Please Go Away !!!!!";
+		if(countitem(7779) < 1) mes "^FF0000"+(1 - countitem(7779)) +"^000000 Golden Key";
+		close;
+
+	L_partir:
+		mes "[^000000WOE Prizes Changer^000000]";
+		mes "Have a nice day.";
+		close;
+}
