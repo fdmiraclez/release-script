@@ -1,0 +1,51 @@
+//===== Athena Script ========================================
+//= Poringcoin Exchanger NPC
+//===== Credits to ===========================================
+//= Created by : --
+//= Re-Edit  : Deviant
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= Poringcoin change to cash point
+//= Easily Edittable to edit another item
+//= I'm using Poring Coin for default
+//===== Additional Comments: =================================
+
+new_zone04,175,148,5	script	PoringCoin Changer	96,{
+	mes "[^000000PoringCoin Changer^000000]";
+	mes "Hye There.";
+	mes "You can change your Poring Coin With Cash Point.";
+	mes "20 Poring Coin for 5 Cash Point.";
+	mes "Want change Your Poring Coin?";
+	next;
+	menu "More Info",L_required,"i want to change it!",L_check,"Leave",L_partir;
+
+	L_required:
+		mes "[^000000PoringCoin Changer^000000]";
+		mes "^FF0000Poring Coin ?^000000"; //7539
+                mes "Poring Coin Can Get By Winning The Event And Woe :)";
+		close;
+
+	L_check:
+		if(countitem(7539) < 20) goto L_manque;
+		mes "[^000000PoringCoin Changer^000000]";
+		mes "Oh, so you did it !";
+		mes "Here, take your Cash Point !";
+		delitem 7539,20;
+		set #CASHPOINTS,#CASHPOINTS+5;
+                dispbottom "[CashPoints +5] Total ["+#CASHPOINTS+"]";
+		close;
+
+	L_manque:
+		mes "[^000000PoringCoin Changer^000000]";
+		mes "You miss...";
+		if(countitem(7539) < 20) mes "^FF0000"+(20 - countitem(7539)) +"^000000 Poring Coin";
+		close;
+
+	L_partir:
+		mes "[^000000PoringCoin Changer^000000]";
+		mes "Have a nice day.";
+		close;
+}
