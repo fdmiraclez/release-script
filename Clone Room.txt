@@ -1,0 +1,44 @@
+//===== Athena Script ========================================
+//= Clone Room NPC
+//===== Credits to ===========================================
+//= Created by : goddameit
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= NONE
+//===== Additional Comments: =================================
+
+prontera,150,180,4	script	Clone Room	100,{
+warp $@cloneroommap$[0],$@cloneroommap$[1],$@cloneroommap$[2];
+end;
+OnInit:
+	setarray $@cloneroommap$,"pvp_n_1-2",100,100;
+	initnpctimer;
+	end;
+OnTimer5000:
+	killmonsterall $@cloneroommap$[0];
+	for(set .@i,1;.@i<=$PlayerNumberM;set .@i,.@i+1){
+		clone($@cloneroommap$[0],atoi($@cloneroommap$[1])+rand(-8,8),atoi($@cloneroommap$[2])+rand(-8,8),"",getcharid(0,getd("$RecordName"+.@i+"$")),0);
+	}
+	setnpctimer 0;
+	initnpctimer;
+	end;
+}
+-	script	FirebombsEvent	-1,{
+OnInit:
+	if(!getusers(1)){while($PlayerNumberM){setd "$RecordName"+(set($PlayerNumberM,$PlayerNumberM-1)+1)+"$","";}}
+	end;
+
+OnPCLoginEvent:
+	setd "$RecordName"+set(@AIDNumberM,set($PlayerNumberM,$PlayerNumberM+1))+"$",strcharinfo(0);
+	end;
+
+OnPCLogoutEvent:
+	setd "$RecordName"+@AIDNumberM+"$",getd("$RecordName"+(set(.@AIDNumberM,set($PlayerNumberM,$PlayerNumberM-1)+1))+"$");
+	attachrid getcharid(3,getd("$RecordName"+@AIDNumberM+"$"));
+	setd "$RecordName"+@AIDNumberM+"$","";
+	set @AIDNumberM,.@AIDNumberM;
+	end;
+}
