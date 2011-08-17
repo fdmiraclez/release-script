@@ -1,0 +1,23 @@
+//===== Athena Script ========================================
+//= Free Identifier NPC
+//===== Credits to ===========================================
+//= Created by : Deviant
+//= Re-Edit  : --
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= 1 click Identifier items
+//===== Additional Comments: =================================
+
+prontera.gat,143,180,5	script	Identify NPC	700,{
+OnClick:
+	atcommand "@identify";
+end;
+
+OnInit:
+	waitingroom "Free Identify",0;
+	end;
+
+}
