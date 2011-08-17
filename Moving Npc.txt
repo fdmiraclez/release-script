@@ -1,0 +1,43 @@
+//===== eAthena Script ======================================= 
+//= Moving Npc
+//===== By: ================================================== 
+//= Miseru(aka Chaos / Kaba)
+//===== Current Version: ===================================== 
+//= 2.0
+//===== Description: ========================================= 
+//= Really easy to customize walking npc with variables
+//= Easy to customize Walking NPC
+//= Just put him where you want him, set custom texts
+//  or remove them, and well have fun
+//===== Additional Comments: =================================
+
+prontera,155,180,6	script	GM Spammer	1582,{
+ 	npcspeed 150;
+OnTouch:
+	mes "[Gm Staff]";
+	mes "Welcome to Prontera,";
+	mes "also known as Main Town of the SERVERNAME";
+	mes "Greatest Gm Staff Here!!!";
+	next;
+	mes "[Gm Staff]";
+	mes "That's ERVERNAME staff of course *wink*";
+	mes "Please respect their walkway!";
+	close;
+
+OnTimer4000:
+	getmapxy($@_guardmap$,$@_guardx,$@_guardy,1);
+	npcwalkto $@_guardx+rand(-5,5),$@_guardy+rand(-5,5);
+OnTimer8000:
+	setnpctimer 0;
+doitagain:
+        set $guard,rand(7);
+	if($guard == 0) npctalk "Welcome To SERVERNAME!";
+	if($guard == 1) npctalk "How Are You All Today ?!";
+	if($guard == 2) npctalk "Please Dont Spam Other Server Here! >.<";
+	if($guard == 3) npctalk "Help Inviting , GM Will Give Reward! O.o";
+	if($guard > 3 || $guard < 0) goto doitagain;
+	end;
+OnInit:
+ 	initnpctimer;
+        end;
+}
