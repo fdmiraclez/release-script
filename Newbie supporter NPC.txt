@@ -1,0 +1,49 @@
+//===== Athena Script ========================================
+//= Supporter NPC
+//===== Credits to ===========================================
+//= Created by : --
+//= Re-Edit  : Deviant
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= 
+//= 
+//===== Additional Comments: =================================
+
+prontera,145,183,5	script	Freebies	864,{
+
+	if(##sorry == 1) goto L_1;
+	mes "Welcome To ServerName " + strcharinfo(0) + " !!";
+	next;
+	mes "So You Is A New Player Here Right?";
+	next;
+	mes "Take My Reward Now And Have Fun With ServerName";
+	next;
+	getitem2 2504,1,1,7,0,0,0,0,0; // +7 muffler[1]
+	getitem2 2104,1,1,7,0,0,0,0,0; // +7 buckler[1]
+	getitem2 2102,1,1,7,0,0,0,0,0; // +7 Guard[1]
+	getitem2 2404,1,1,7,0,0,0,0,0; // +7 Shoes[1]
+	getitem2 00000,1,1,0,0,0,0,0,0; // Custom Items[0]
+	getitem2 00000,1,1,0,0,0,0,0,0; // Custom Items[0]
+	getitem2 00000,1,1,0,0,0,0,0,0; // Custom Items[0]
+	set Zeny,zeny+5000000;
+	announce "ServerName System : We Have New Player Join Our Server. His Name [ "+strcharinfo(0)+" ] !!",2;
+	emotion e_thx;
+	set ##sorry,1;
+	close;
+
+	OnInit:
+	waitingroom "Reedem NPC For newbie",0;
+	end;
+
+
+L_1:
+	mes "Hey! you Already Get Reward From Me.";
+	mes "Sorry I Cant Give You Anymore Again More Than 1 Times.";
+	next;
+	mes "I dont Care!!";
+	emotion e_bzz;
+	close;
+}
