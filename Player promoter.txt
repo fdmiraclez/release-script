@@ -1,0 +1,110 @@
+//===== Athena Script ========================================================
+//= SuperPlayer NPC
+//===== Credits to ===========================================================
+//= Created by : --
+//= Re-Edit  : Deviant
+//===== Current Version: =====================================================
+//= 1.0
+//===== Compatible With: =====================================================
+//= Any Athena Version
+//===== Description: =========================================================
+//= With this script you can change normal player become super player 30 days
+//===== Additional Comments: =================================================
+
+prontera,150,188,5	script	Player Promoter	947,{
+	mes "[Player Promoter]";
+	if ( getgmlevel() == $@super_player_lvl ) {
+		set .@left, #pp_accupgrade - gettimetick(2);
+		set .@day,  .@left / (24*60*60);
+		set .@hour, .@left % (24*60*60) / (60*60);
+		set .@min,  .@left % (24*60*60) % (60*60) / (60);
+		set .@sec,  .@left % (24*60*60) % (60*60) % (60);
+		mes "Your account is currently a Super Player. You still have "+ .@day +" days, "+ .@hour +" hours "+ .@min +" min "+ .@sec +" seconds left to become back to normal player.";
+		close;
+	}
+	else if ( getgmlevel() < 99 ) {
+		mes "Only Admin can use me.";
+		close;
+	}
+	else {
+		mes "Hi Admin, select the type of input to make a player into Super Player.";
+		next;
+		if ( select ( "Account ID", "Player name" ) == 1 ) {
+			mes "Input player account ID";
+			next;
+			input .@i_aid;
+			query_sql "select `char`.account_id, login.level from `char` left join login on `char`.account_id = login.account_id where login.account_id = "+ .@i_aid, .@aid, .@gmlvl;
+		} else {
+			mes "Input player name";
+			next;
+			input .@name$;
+			query_sql "select `char`.account_id, login.level from `char` left join login on `char`.account_id = login.account_id where `char`.name = '"+ escape_sql(.@name$) +"'", .@aid, .@gmlvl;
+
+		}
+		if ( .@aid == 0 ) {
+			mes "no such player name";
+			close;
+		}
+		else if ( .@gmlvl > 10 ) {
+			mes "that player is already a gm";
+			close;
+		}
+		else if ( .@gmlvl == 10 ) {
+			mes "that player is already a super player";
+			close;
+		}
+		if ( isloggedin(.@aid) ) {
+			set .@playername$, rid2name(.@aid);
+			set .@origin, getcharid(3);
+			attachrid .@aid;
+			message strcharinfo(0), "A GM has promote your account into Super Player";
+			atcommand "@adjgmlvl "+ $@super_player_lvl +" "+ strcharinfo(0);
+			set #pp_accupgrade, gettimetick(2) + $@super_player_time;
+			attachrid .@origin;
+			mes "The player "+ .@playername$ +" is online and received the rewards";
+			close;
+		} else {
+			mes "The player is not online";
+			set .@player_promote_size, getarraysize( $player_promote_list );
+			if ( .@player_promote_size == 128 ) {
+				mes "and already reach memory limit";
+				close;
+			}
+			mes "but will receive the rewards on his next login";
+			set $player_promote_list[ .@player_promote_size ], .@aid;
+			close;
+		}
+	}
+}
+-	script	player_demoter	-1,{
+OnPCLoginEvent:
+	if ( getgmlevel() > 10 )
+		set #pp_accupgrade, 0;
+	set .@player_promote_size, getarraysize( $player_promote_list );
+	for ( set .@i, 0; .@i < .@player_promote_size; set .@i, .@i +1 ) {
+		if ( $player_promote_list == getcharid(3) ) {
+			atcommand "@adjgmlvl "+ $@super_player_lvl +" "+ strcharinfo(0);
+			message strcharinfo(0), "A GM has promote your account into Super Player";
+			set #pp_accupgrade, gettimetick(2) + $@super_player_time; // 30 days
+			deletearray $player_promote_list[.@i], 1;
+			end;
+		}
+	}
+	if ( #pp_accupgrade == 0 ) end;
+	set .@left, #pp_accupgrade - gettimetick(2);
+	if ( .@left > 0 ) {
+		atcommand "@adjgmlvl "+ $@super_player_lvl +" "+ strcharinfo(0);
+		if ( .@left >= 2147483 ) end;
+		addtimer .@left *1000, "player_demoter::Ondemote";
+		end;
+	}
+Ondemote:
+	atcommand "@adjgmlvl 0 "+ strcharinfo(0);
+	message strcharinfo(0), "Your account has demoted to normal player";
+	set #pp_accupgrade, 0;
+	end;
+OnInit:
+	set $@super_player_lvl, 10;
+	set $@super_player_time, 30 * 24*60*60; // 30 * 24*60*60 = 30 days
+	end;
+}
