@@ -1,0 +1,46 @@
+//===== Athena Script ========================================
+//= Multiple Cash Shops NPC
+//===== Credits to ===========================================
+//= Created by : --
+//= Re-Edit  : Deviant
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= Easily Edittable Array to Add More Shops
+//= Easily Edittable Array to Change Type of Shop
+//===== Additional Comments: =================================
+
+
+-	cashshop	Upper Items	-1,ITEMID:COST,ITEMID:COST,ITEMID:COST,ITEMID:COST
+-	cashshop	Middle Items	-1,ITEMID:COST,ITEMID:COST,ITEMID:COST,ITEMID:COST,
+-	cashshop	Lower Items	-1,ITEMID:COST,ITEMID:COST,ITEMID:COST,ITEMID:COST
+-	cashshop	Set Of Items	-1,ITEMID:COST,ITEMID:COST,ITEMID:COST,ITEMID:COST
+-	cashshop	Special Items	-1,ITEMID:COST,ITEMID:COST,ITEMID:COST,ITEMID:COST
+-	cashshop	Valkyrie Sets	-1,5171:10,2357:30,2115:10,2524:25,2421:20
+-	cashshop	Other Etcs	-1,12902:15,12920:20,12921:20
+
+
+quiz_02,343,77,5	script	CashShop	102,{
+  mes "[YukikoRO Cash Shop]";
+
+  // Create array of shop npc names
+  setarray .@shops$[0],"Upper Items","Middle Items","Lower Items","Set Of Items","Special Items","Valkyrie Sets","Other Etcs";
+
+  // Create *NEW* array to hold shop types
+  setarray .@shop_types[0],0,1,2,1;
+
+  // Generate Menu from .@shops$[]
+  set .@menu$, .@shops$[0];
+  for (set .@a, 1; .@a < getarraysize(.@shops$); set .@a, .@a + 1) {
+    set .@menu$, .@menu$ + ":" + .@shops$[.@a];
+  }
+
+  // Query Selection (-1 because of Array Index starting @ 0)
+  set .@a, select(.@menu$) - 1;
+
+  // Call Shop
+  callshop .@shops$[.@a],.@shop_types[.@a];
+  npcshopattach .@shops$[.@a];
+}
