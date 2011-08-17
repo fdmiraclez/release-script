@@ -1,0 +1,100 @@
+//===== Athena Script ========================================
+//= Bat True Walk NPC
+//===== Credits to ===========================================
+//= Created by : --
+//= Re-Edit  : Deviant
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= Any Athena Version
+//===== Description: =========================================
+//= This is a very good method to add walk capabilities to your NPCs
+//  protecting the user from the distance errors
+//= Header - Please include this header in your Walk Enabled NPCs to control distance errors
+//  Set the status to "In Use" (multiplayer) 
+//  set .inUse, .inUse + 1;
+//  Reset the current lock time while the user talk with the NPC
+//  set .curLockT,0;
+//===== Additional Comments: =================================
+
+prontera.gat,155,170,3	script	Vampire#1::Vmp	799,3,3,{
+\
+	
+	mes "[Vampire]";
+	mes "Hi " + strcharinfo(0) + ", I like you join SERVERNAME, Did You need My Help?";
+	next;
+	if (select("Sure","Noo!") == 1) {
+		percentheal rand(0,0),0;
+		mes "[Vampire]";
+		mes "Thanks you For Staying On use" + strcharinfo(0) + ", i love your You Be on Of SERVERNAME!";
+		close2; // This close command ensure the execution of the next lines after press Close Button
+		// Reverse the status to "Free to walk"
+		set .inUse, .inUse - 1;
+		end;
+	}
+	mes "[Vampire]";
+	mes "No? Snarkklllliiitshhh...i Hate You! Sob!!";
+	close2; // This close command ensure the execution of the next lines after press Close
+	// Set status to "Free to walk"
+	set .inUse, .inUse - 1;
+	end;
+OnInit:
+	// Define the coordinates for this NPC (you can use 0,400/0,400 for a full map movement)
+	// Horizontal coordinates
+	set .minX,148;
+	set .maxX,162;
+	// Vertical coordinates
+	set .minY,175;
+	set .maxY,132;
+	// Define the min/max distance for each movement
+	set .minD,0;
+	set .maxD,10;
+	// Define stopped steps before change the status back to "Free to walk"
+	set .maxLock,30;
+	// Set the speed for this NPC (50=Faster / 250=Slower)
+	npcspeed 100;
+	
+	// Start the movements
+	initnpctimer;
+	end;
+	
+// Set here the time for the next movement (ms)
+OnTimer1000:
+	if (.inUse) {
+		set .curLockT, .curLockT + 1;
+		if (.curLockT > .maxLock) set .inUse, 0;
+	} else {
+		getmapxy .map$,.x,.y,1;
+		set .curX, callfunc("NPCWalk",.minX, .maxX,.minD,.maxD,.x);
+		set .curY, callfunc("NPCWalk",.minY, .maxY,.minD,.maxD,.y);
+		npcwalkto .curX, .curY;
+	}
+	stopnpctimer;
+	initnpctimer;
+	end;
+OnTouch:
+	percentheal rand(0,0),0;
+	npctalk "Thanks you For Staying On use" + strcharinfo(0) + ", i love your You Be on Of SkyHeavenRO!";
+	emotion e_gg;
+	specialeffect2 216;
+}
+
+prontera.gat,155,169,3	duplicate(Vmp)	Vampire#2	799,3,3
+prontera.gat,150,166,3	duplicate(Vmp)	Vampire#3	799,3,3
+prontera.gat,160,163,3	duplicate(Vmp)	Vampire#4	799,3,3
+// ---------------------------------------------------------------------------- \\
+//                                 END SAMPLE                                    \\
+// ----------------------------------------------------------------------- -----  \\
+
+// Function to calculate one single coordinate
+function	script	NPCWalk	{
+	set .CP, getarg(4);
+	set .DST, rand(getarg(2),getarg(3));
+	if (rand(2))
+		set .CP, .CP + .DST;
+	else
+		set .CP, .CP - .DST;
+	if (.CP < getarg(0)) set .CP, .CP + .DST;
+	if (.CP > getarg(1)) set .CP, .CP - .DST;
+	return .CP;
+}
